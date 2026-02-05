@@ -10,7 +10,13 @@ let logs = [];
 
 app.post("/log", (req, res) => {
 
-  const time = new Date().toLocaleTimeString();
+  const time = new Date().toLocaleTimeString("en-IN", {
+  timeZone: "Asia/Kolkata",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+});
+
 
   logs.push({
     time,
