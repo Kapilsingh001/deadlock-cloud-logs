@@ -8,26 +8,23 @@ app.use(express.json());
 
 let logs = [];
 
-// receive log
 app.post("/log", (req, res) => {
+
   const time = new Date().toLocaleTimeString();
-  const { message, level = "INFO" } = req.body;
 
   logs.push({
     time,
-    level,
-    message
+    level: req.body.level || "INFO",
+    message: req.body.message
   });
 
   res.json({ status: "ok" });
 });
 
-// send logs
 app.get("/logs", (req, res) => {
   res.json(logs);
 });
 
-// health check
 app.get("/health", (req, res) => {
   res.json({ status: "running" });
 });
