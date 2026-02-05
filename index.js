@@ -11,7 +11,14 @@ let logs = [];
 // receive log
 app.post("/log", (req, res) => {
   const time = new Date().toLocaleTimeString();
-  logs.push(`[${time}] ${req.body.message}`);
+  const { message, level = "INFO" } = req.body;
+
+  logs.push({
+    time,
+    level,
+    message
+  });
+
   res.json({ status: "ok" });
 });
 
@@ -30,4 +37,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Cloud server running on port " + PORT);
 });
-
