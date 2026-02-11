@@ -6,29 +6,45 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-let logs = [];
+// logs separated by user
+let userLogs = {};
 
 app.post("/log", (req, res) => {
 
+  const { userId, level, message } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ error: "userId required" });
+  }
+
   const time = new Date().toLocaleTimeString("en-IN", {
-  timeZone: "Asia/Kolkata",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-});
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 
+  // create array if user doesn't exist
+  if (!userLogs[userId]) {
+    userLogs[userId] = [];
+  }
 
-  logs.push({
+  userLogs[userId].push({
     time,
-    level: req.body.level || "INFO",
-    message: req.body.message
+    level: level || "INFO",
+    message
   });
 
   res.json({ status: "ok" });
 });
 
-app.get("/logs", (req, res) => {
-  res.json(logs);
+
+// get logs for specific user
+app.get("/logs/:userId", (req, res) => {
+
+  const userId = req.params.userId;
+
+  res.json(userLogs[userId] || []);
 });
 
 app.get("/health", (req, res) => {
