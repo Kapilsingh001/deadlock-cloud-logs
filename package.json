@@ -1,11 +1,15 @@
 {
   "name": "deadlock-cloud-logs",
   "version": "1.0.0",
+  "description": "Cloud logging server for Deadlock Detection Simulator",
   "type": "module",
   "main": "index.js",
+
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "node --watch index.js"
   },
+
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5"

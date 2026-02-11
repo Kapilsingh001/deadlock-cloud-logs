@@ -6,17 +6,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// logs separated by user
-let userLogs = {};
+// Store logs per user
+const userLogs = {};
+
+/* ================= ADD LOG ================= */
 
 app.post("/log", (req, res) => {
 
-  const { userId, level, message } = req.body;
+  const { userId, level = "INFO", message } = req.body;
 
-  if (!userId) {
-    return res.status(400).json({ error: "userId required" });
+  // validation
+  if (!userId || !message) {
+    return res.status(400).json({
+      error: "userId and message are required"
+    });
   }
 
+  // IST time
   const time = new Date().toLocaleTimeString("en-IN", {
     timeZone: "Asia/Kolkata",
     hour: "2-digit",
@@ -24,35 +30,50 @@ app.post("/log", (req, res) => {
     second: "2-digit",
   });
 
-  // create array if user doesn't exist
+  // create log array if user not exists
   if (!userLogs[userId]) {
     userLogs[userId] = [];
   }
 
+  // push log
   userLogs[userId].push({
     time,
-    level: level || "INFO",
+    level,
     message
   });
 
-  res.json({ status: "ok" });
+  res.json({
+    status: "ok",
+    user: userId
+  });
 });
 
 
-// get logs for specific user
+/* ================= GET USER LOGS ================= */
+
 app.get("/logs/:userId", (req, res) => {
 
-  const userId = req.params.userId;
+  const { userId } = req.params;
 
-  res.json(userLogs[userId] || []);
+  if (!userLogs[userId]) {
+    return res.json([]);
+  }
+
+  res.json(userLogs[userId]);
 });
+
+
+/* ================= HEALTH CHECK ================= */
 
 app.get("/health", (req, res) => {
   res.json({ status: "running" });
 });
 
+
+/* ================= START SERVER ================= */
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("Cloud server running on port " + PORT);
+  console.log(`Cloud server running on port ${PORT}`);
 });
