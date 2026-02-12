@@ -9,7 +9,7 @@ app.use(express.json());
 // Store logs per user
 const userLogs = {};
 
-/* ================= ADD LOG ================= */
+// ADD LOG 
 
 app.post("/log", (req, res) => {
 
@@ -49,7 +49,7 @@ app.post("/log", (req, res) => {
 });
 
 
-/* ================= GET USER LOGS ================= */
+//GET USER LOGS
 
 app.get("/logs/:userId", (req, res) => {
 
@@ -63,14 +63,14 @@ app.get("/logs/:userId", (req, res) => {
 });
 
 
-/* ================= HEALTH CHECK ================= */
+//HEALTH CHECK 
 
 app.get("/health", (req, res) => {
   res.json({ status: "running" });
 });
 
 
-/* ================= START SERVER ================= */
+// START SERVER
 
 const PORT = process.env.PORT || 3000;
 
